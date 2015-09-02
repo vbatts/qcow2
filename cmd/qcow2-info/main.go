@@ -38,7 +38,7 @@ func main() {
 		}
 
 		q := qcow2.Header{
-			Version:               qcow2.Qcow2Version(be32(buf[4:8])),
+			Version:               qcow2.Version(be32(buf[4:8])),
 			BackingFileOffset:     be64(buf[8:16]),
 			BackingFileSize:       be32(buf[16:20]),
 			ClusterBits:           be32(buf[20:24]),
@@ -54,12 +54,12 @@ func main() {
 		}
 
 		if q.Version == 3 {
-			size, err := fh.Read(buf[:qcow2.Qcow2V3HeaderSize])
+			size, err := fh.Read(buf[:qcow2.V3HeaderSize])
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "[ERR] %q: %s\n", arg, err)
 				os.Exit(1)
 			}
-			if size < qcow2.Qcow2V3HeaderSize {
+			if size < qcow2.V3HeaderSize {
 				fmt.Fprintf(os.Stderr, "[ERR] %q: short read\n", arg)
 				os.Exit(1)
 			}

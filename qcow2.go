@@ -7,13 +7,13 @@ var (
 	// V2HeaderSize is the image header at the beginning of the file
 	V2HeaderSize = 72
 
-	// Qcow2V3HeaderSize is directly following the v2 header, up to 104
-	Qcow2V3HeaderSize = 104 - V2HeaderSize
+	// V3HeaderSize is directly following the v2 header, up to 104
+	V3HeaderSize = 104 - V2HeaderSize
 )
 
 type (
-	// Qcow2Version number of this image. Valid versions are 2 or 3
-	Qcow2Version int
+	// Version number of this image. Valid versions are 2 or 3
+	Version int
 
 	// CryptMethod is whether no encryption (0), or AES encryption (1)
 	CryptMethod int
@@ -38,18 +38,18 @@ func (qcm CryptMethod) String() string {
 
 type Header struct {
 	// magic [:4]
-	Version               Qcow2Version // [4:8]
-	BackingFileOffset     int64        // [8:16]
-	BackingFileSize       int          // [16:20]
-	ClusterBits           int          // [20:24]
-	Size                  int64        // [24:32]
-	CryptMethod           CryptMethod  // [32:36]
-	L1Size                int          // [36:40]
-	L1TableOffset         int64        // [40:48]
-	RefcountTableOffset   int64        // [48:56]
-	RefcountTableClusters int          // [56:60]
-	NbSnapshots           int          // [60:64]
-	SnapshotsOffset       int64        // [64:72]
+	Version               Version     // [4:8]
+	BackingFileOffset     int64       // [8:16]
+	BackingFileSize       int         // [16:20]
+	ClusterBits           int         // [20:24]
+	Size                  int64       // [24:32]
+	CryptMethod           CryptMethod // [32:36]
+	L1Size                int         // [36:40]
+	L1TableOffset         int64       // [40:48]
+	RefcountTableOffset   int64       // [48:56]
+	RefcountTableClusters int         // [56:60]
+	NbSnapshots           int         // [60:64]
+	SnapshotsOffset       int64       // [64:72]
 
 	// v3
 	IncompatibleFeatures int // [72:80] bitmask
