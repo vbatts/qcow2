@@ -9,8 +9,50 @@ import (
 	"testing"
 )
 
+/*
+qemu-img create -f qcow2 file.qcow2 100m
+sudo modprobe nbd max_part=63
+sudo qemu-nbd -f qcow2 -c /dev/nbd0 file.qcow2
+sudo mkfs.ext2 /dev/nbd0
+mkdir -p file/
+sudo mount /dev/nbd0 file/
+sudo umount file/
+sudo qemu-nbd -d /dev/nbd0
+sudo qemu-img snapshot -c base file.qcow2
+sudo qemu-nbd -f qcow2 -c /dev/nbd0 file.qcow2
+sudo mount /dev/nbd0 file
+echo Howdy | sudo dd of=file/hello.txt
+sudo umount file/
+sudo qemu-nbd -d /dev/nbd0
+sudo qemu-img snapshot -c hello file.qcow2
+sudo qemu-nbd -f qcow2 -c /dev/nbd0 file.qcow2
+sudo mount /dev/nbd0 file
+sudo rm file/hello.txt
+sudo umount file/
+sudo qemu-nbd -d /dev/nbd0
+ls -lsh ./file.qcow2
+# 4.9M -rw-r--r--. 1 vbatts vbatts 5.1M Sep  3 13:38 file.qcow2
+qcow2-info ./file.qcow2
+# image: ./file.qcow2
+# file format: qcow2
+# virtual size: 100M (104857600 bytes)
+# disk size: 4.8M
+# cluster_size: 65536
+# Snapshot list:
+# ID        TAG                 VM SIZE                DATE       VM CLOCK
+# 1         base                      0 2015-09-03 13:36:55   00:00:00.000
+# 2         hello                     0 2015-09-03 13:38:07   00:00:00.000
+# Format specific information:
+#    compat: 1.1
+#    lazy refcounts: false
+#    refcount bits: 16
+#    corrupt: false
+gzip -9 file.qcow2 > file.qcow2.gz
+*/
+var testQcowFile = "./testdata/file.qcow2.gz"
+
 func TestHeader(t *testing.T) {
-	f, err := os.Open("./testdata/file.qcow2.gz")
+	f, err := os.Open(testQcowFile)
 	if err != nil {
 		t.Fatal(err)
 	}
